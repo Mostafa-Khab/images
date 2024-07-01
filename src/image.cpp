@@ -4,10 +4,10 @@
 #include <stb_image.h>
 #include <stb_image_write.h>
 
-#include <cstdint>
 #include <string>
-#include <algorithm>
+#include <cstdint>
 #include <cstring>
+#include <algorithm>
 
 //check deps/ folder in https://github.com/Mostafa-Khab/gfx-project.git
 #include <logger.hpp>
@@ -133,7 +133,7 @@ namespace gfx
     data = nullptr;
   }
 
-  long image::size()
+  long image::size() const
   {
     return width * height * channels;
   }
@@ -148,6 +148,50 @@ namespace gfx
       if(channels > 2) data[i + 2] *= b;
       if(channels > 3) data[i + 3] *= a;
     }
+  }
+
+  //this function requires some checks. do them to avoid segfaults.
+  void image::overlay(const image& img, int x, int y)
+  {
+
+    for(int i = 0; i < img.height; ++i)
+    {
+      if(i + y < 0) continue;
+      if(i + y >= height) break;
+
+      for(int j = 0; j < img.width; ++j)
+      {
+        if(j + x >= width) break;
+        if(j + x < 0) continue;
+
+        std::uint8_t* d = &data[((i + y) * width + (j + x)) * channels];
+        std::uint8_t* s = &img.data[(i * img.width + j) * img.channels];
+
+        float s_alpha = (img.channels < 4)? 1 : s[3] / 255.f;
+        //float d_alpha = (    channels < 4)? 1 : d[3] / 255.f;
+
+        for(int c = 0; c < img.channels && c < channels; ++c)
+        {
+          d[c] = s[c] * s_alpha + d[c] * (1.f - s_alpha);
+        }
+      }
+    }
+  }
+
+  image& image::operator= (const image& img)
+  {
+    create(img.width, img.height, img.channels, img.data);
+    return *this;
+  }
+
+  image& image::operator= (image&& img)
+  {
+    create(img.width, img.height, img.channels, img.data);
+    //I have a good idea. since data mustn't be null to free the image.
+    //why not to copy just the image data with the buffer then assign data to null.
+    //and you saved a heap allocation.
+    //img.data = nullptr
+    return *this;
   }
 
   //this section isn't related too much to an image.

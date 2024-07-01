@@ -24,11 +24,12 @@ namespace gfx
       bool create(int width, int height, int channels);
       bool create(int width, int height, int channels, std::uint8_t* data);
 
-      long size();
+      long size() const;
 
       void free();
 
       void mask(float r, float g, float b, float a = 1.f);
+      void overlay(const image& img, int x, int y);
 
       image& operator= (const image& img);
       image& operator= (image&& img);

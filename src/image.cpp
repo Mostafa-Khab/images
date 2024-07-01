@@ -4,7 +4,6 @@
 #include <stb_image.h>
 #include <stb_image_write.h>
 
-#include <string>
 #include <cstdint>
 #include <cstring>
 #include <algorithm>
@@ -34,7 +33,12 @@ namespace gfx
 
   image::image(image&& img)
   {
-    create(img.width, img.height, img.channels, img.data);
+    *this = img;
+  }
+
+  image::~image()
+  {
+    this->free();
   }
 
   bool image::load(std::string file)
@@ -186,11 +190,25 @@ namespace gfx
 
   image& image::operator= (image&& img)
   {
-    create(img.width, img.height, img.channels, img.data);
-    //I have a good idea. since data mustn't be null to free the image.
-    //why not to copy just the image data with the buffer then assign data to null.
-    //and you saved a heap allocation.
-    //img.data = nullptr
+    if(!img.channels || !img.width || !img.height)
+    {
+      Log::error("trying to create() a zero sized image");
+      return *this;
+    }
+
+    if(!img.data)
+    {
+      Log::error("create() tried to copy pixels from a nullptr");
+      return *this;
+    }
+
+    data     = img.data;
+    width    = img.width;
+    height   = img.height;
+    channels = img.channels;
+
+    img.data = nullptr;
+    Log::info("copy construct from rvalue, 1 heap allocation saved");
     return *this;
   }
 

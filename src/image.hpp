@@ -6,6 +6,7 @@
 #ifndef IMAGE_HPP
 #define IMAGE_HPP
 
+#include <string>
 #include <cstdint>
 
 namespace gfx
@@ -17,6 +18,8 @@ namespace gfx
       image(std::string file);
       image(const image& img);
       image(image&& img);
+
+     ~image();
 
       bool load(std::string file);
       bool save(std::string file);

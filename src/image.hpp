@@ -34,6 +34,8 @@ namespace gfx
       void mask(float r, float g, float b, float a = 1.f);
       void overlay(const image& img, int x, int y);
 
+      image crop(int x, int y, int w, int h);
+
       image& operator= (const image& img);
       image& operator= (image&& img);
 

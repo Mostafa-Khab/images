@@ -182,6 +182,33 @@ namespace gfx
     }
   }
 
+  image image::crop(int x, int y, int w, int h)
+  {
+    image cropped;
+    cropped.create(w, h, channels);
+
+    if(x < 0 || y < 0)
+      return cropped;
+
+
+    for(int i = 0; i < h; ++i)
+    {
+      if(i + y >= height) break;
+      for(int j = 0; j < w; ++j)
+      {
+        if(j + x >= width) break;
+
+        std::memcpy(
+            &cropped.data[(i * w + j) * channels],
+            &data[((i + y) * width + (j + x)) * channels],
+            channels
+         );
+      }
+    }
+
+    return cropped;
+  }
+
   image& image::operator= (const image& img)
   {
     create(img.width, img.height, img.channels, img.data);

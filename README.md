@@ -7,7 +7,7 @@
 - basic manipulations like crop, color mask, overlay, creating plain ones, etc...
 
 ### how to use.
-- you need to download stb_image.h and stb_image_write.h.
+- you need to download stb_image.h and stb_image_write.h from [https://github.com/nothings/stb.git](https://github.com/nothings/stb.git).
 - logger can be found in deps in [gfx-project](https://github.com/Mostafa-Khab/gfx-project.git), 
 
 ### NOTE:

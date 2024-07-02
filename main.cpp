@@ -1,12 +1,30 @@
-#include <iostream>
+#include <string>
+
 #include "src/image.hpp"
+#include "src/font.hpp"
+
+const int font_size = 48;
 
 int main(int argc, const char* argv[])
 {
-  gfx::image img("/home/sasa/Projects/gfx-projects/games/bird/assets/bird64.png");
+  std::string str("hello");
+  gfx::font font;
+  font.load("/usr/share/fonts/truetype/hack/Hack-Regular.ttf");
+  font.set_size(0, font_size);
 
+  gfx::image atlas;
+  atlas.create(str.size() * font_size, font_size, 1);
 
-  img.crop(64, 0, 64, 64);
-  img.save("test.jpg");
+  int pen = 0;
+  for(int i = 0; i < str.size(); ++i)
+  {
+    auto ch = font.get(str[i]);
+    gfx::image c;
+    c.create(ch.w, ch.h, 1, ch.data);
+    atlas.overlay(c, pen , 0);
+    pen += ch.advance;
+  }
+
+  atlas.save("test.jpg");
 }
 

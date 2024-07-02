@@ -31,10 +31,10 @@ namespace gfx
 
       void free();
 
-      void mask(float r, float g, float b, float a = 1.f);
-      void overlay(const image& img, int x, int y);
+      image& mask(float r, float g, float b, float a = 1.f);
+      image& overlay(const image& img, int x, int y);
 
-      image crop(int x, int y, int w, int h);
+      image& crop(int x, int y, int w, int h);
 
       image& grayscale_avg();
       image& grayscale_lum();

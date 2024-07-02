@@ -144,7 +144,7 @@ namespace gfx
   }
 
   //this section will be more related to effects on images.
-  void image::mask(float r, float g, float b, float a)
+  image& image::mask(float r, float g, float b, float a)
   {
     for(int i = 0; i < size(); i += channels)
     {
@@ -153,10 +153,12 @@ namespace gfx
       if(channels > 2) data[i + 2] *= b;
       if(channels > 3) data[i + 3] *= a;
     }
+
+    return *this;
   }
 
   //this function requires some checks. do them to avoid segfaults.
-  void image::overlay(const image& img, int x, int y)
+  image& image::overlay(const image& img, int x, int y)
   {
 
     for(int i = 0; i < img.height; ++i)
@@ -181,16 +183,16 @@ namespace gfx
         }
       }
     }
+    return *this;
   }
 
-  image image::crop(int x, int y, int w, int h)
+  image& image::crop(int x, int y, int w, int h)
   {
+    if(x < 0 || y < 0)
+      return *this;
+
     image cropped;
     cropped.create(w, h, channels);
-
-    if(x < 0 || y < 0)
-      return cropped;
-
 
     for(int i = 0; i < h; ++i)
     {
@@ -207,7 +209,9 @@ namespace gfx
       }
     }
 
-    return cropped;
+    this->free();
+    *this = cropped;
+    return *this;
   }
 
   image& image::grayscale_avg()

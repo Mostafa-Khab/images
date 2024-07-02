@@ -8,7 +8,7 @@ namespace gfx
   bool font::has_freetype = false;
   int font::size = 0;
 
-  font::font(): m_done(false)
+  font::font(): m_done(false), m_loaded(false)
   {
     if(has_freetype) 
       return;
@@ -46,6 +46,8 @@ namespace gfx
     int error = FT_New_Face(library, file.c_str(), 0, &face);
     if(error)
       Log::error("failed to load font file at: " + file);
+    else
+      m_loaded = true;
 
     return !error;
   }

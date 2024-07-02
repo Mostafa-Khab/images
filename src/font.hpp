@@ -34,6 +34,9 @@ namespace gfx
     private:
       static bool has_freetype;
       bool m_done;
+      bool m_loaded;
+
+      friend class font;
   };
 
   struct font::character

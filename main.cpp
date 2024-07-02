@@ -14,6 +14,19 @@ int main(int argc, const char* argv[])
 
   gfx::image img;
   img.create(str, font);
-  img.save("test.jpg");
+
+  gfx::image text;
+  text.create(img.width, img.height, 4);
+  text.mask(0, 0, 0);
+
+  for(int i = 0; i < text.height; ++i)
+  {
+    for(int j = 0; j < text.width; ++j)
+    {
+        text.data[(i * text.width + j) * text.channels + 3] = img.data[(i * img.width + j)];
+    }
+  }
+
+  text.save("test.png");
 }
 

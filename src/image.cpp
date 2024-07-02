@@ -46,6 +46,10 @@ namespace gfx
   bool image::load(std::string file)
   {
     data = reinterpret_cast<std::uint8_t*>(stbi_load(file.c_str(), &width, &height, &channels, 0));
+
+    if(data)
+      m_loaded = true;
+
     return data;
   }
 
@@ -167,7 +171,11 @@ namespace gfx
     if(!data)
       return;
 
-    stbi_image_free(data);
+    if(m_loaded)
+      stbi_image_free(data);
+    else
+      delete[] data;
+
     data = nullptr;
   }
 

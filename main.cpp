@@ -1,15 +1,23 @@
 #include <string>
+#include <iostream>
 
 #include "src/image.hpp"
 #include "src/font.hpp"
 
-const int font_size = 48;
+const int font_size = 128;
 
 int main(int argc, const char* argv[])
 {
-  std::wstring str(L" hello world");
+  std::wstring str;
+
+  for(int i = 61502; i <= 61522; ++i)
+  {
+    str += (wchar_t)i;
+    str += ' ';
+  }
+  
   gfx::font font;
-  font.load("/usr/local/share/fonts/HackNerdFont/HackNerdFont-Regular.ttf");
+  font.load("/usr/local/share/fonts/HackNerdFont/HackNerdFont-Bold.ttf");
   font.set_size(0, font_size);
 
   gfx::image img;
@@ -27,6 +35,7 @@ int main(int argc, const char* argv[])
     }
   }
 
+  std::cout << (int)L'' << '\n';
   text.save("test.png");
 }
 

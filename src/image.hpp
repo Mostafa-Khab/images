@@ -58,6 +58,8 @@ namespace gfx
     public:
       int width, height, channels;
       std::uint8_t*  data;
+    private:
+      bool m_loaded = false;;
   };
 }
 

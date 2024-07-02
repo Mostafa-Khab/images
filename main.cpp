@@ -1,12 +1,19 @@
-#include <iostream>
+#include <string>
+
 #include "src/image.hpp"
+#include "src/font.hpp"
+
+const int font_size = 48;
 
 int main(int argc, const char* argv[])
 {
-  gfx::image img("/home/sasa/Projects/gfx-projects/games/bird/assets/bird64.png");
+  std::wstring str(L" hello world");
+  gfx::font font;
+  font.load("/usr/local/share/fonts/HackNerdFont/HackNerdFont-Regular.ttf");
+  font.set_size(0, font_size);
 
-
-  img.crop(64, 0, 64, 64);
+  gfx::image img;
+  img.create(str, font);
   img.save("test.jpg");
 }
 

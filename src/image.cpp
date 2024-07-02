@@ -12,6 +12,7 @@
 //check deps/ folder in https://github.com/Mostafa-Khab/gfx-project.git
 #include <logger.hpp>
 
+#include "font.hpp"
 #include "image.hpp"
 
 namespace gfx
@@ -127,6 +128,38 @@ namespace gfx
 
     std::memcpy(data, d, w * h * c);
     return true;
+  }
+
+  bool image::create(std::wstring str, font& f)
+  {
+    if(!f.m_loaded || f.m_done)
+    {
+      Log::error("using invalid font");
+      return false;
+    }
+
+    image text; 
+    text.create(str.size() * f.size, 1.2 * f.size, 1);
+    text.mask(0,0,0);
+    int pen = 0;
+
+    for(unsigned int i = 0; i < str.size(); ++i)
+    {
+      auto ch = f.get(str[i]);
+      image sub;
+      sub.create(ch.w, ch.h, 1, ch.data);
+      text.overlay(sub, pen, f.size - ch.h + (ch.h - ch.bearing_y));
+      pen += ch.advance;
+    }
+
+    text.crop(0, 0, pen, 1.2 * f.size);
+    *this = std::move(text);
+    return true;
+  }
+
+  bool image::create(std::string str, font& f)
+  {
+    return create(std::wstring(str.begin(), str.end()), f);
   }
 
   void image::free()
@@ -324,6 +357,9 @@ namespace gfx
       Log::error("create() tried to copy pixels from a nullptr");
       return *this;
     }
+    
+    if(data)
+      this->free();
 
     data     = img.data;
     width    = img.width;

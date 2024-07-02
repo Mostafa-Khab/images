@@ -36,7 +36,7 @@ namespace gfx
       bool m_done;
       bool m_loaded;
 
-      friend class font;
+      friend class image;
   };
 
   struct font::character

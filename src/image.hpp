@@ -11,6 +11,8 @@
 
 namespace gfx
 {
+  class font;
+
   class image
   {
     public:
@@ -26,6 +28,8 @@ namespace gfx
 
       bool create(int width, int height, int channels);
       bool create(int width, int height, int channels, std::uint8_t* data);
+      bool create(std::string str, font& f);
+      bool create(std::wstring str, font& f);
 
       long size() const;
 
@@ -33,6 +37,7 @@ namespace gfx
 
       image& mask(float r, float g, float b, float a = 1.f);
       image& overlay(const image& img, int x, int y);
+      //image& overlay(std::wstring, font& f);
 
       image& crop(int x, int y, int w, int h);
 

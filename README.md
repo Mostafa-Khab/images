@@ -11,4 +11,8 @@
 - logger can be found in deps in [gfx-project](https://github.com/Mostafa-Khab/gfx-project.git), 
 
 ### NOTE:
-this small project was made for learning purposes, so don't overrate it :smile:.
+This small project was made for learning purposes, so don't overrate it :smile:.
+
+### NEW:
+You can now create an image from a string (or even wstring) and a font file.
+

@@ -36,8 +36,19 @@ namespace gfx
 
       image crop(int x, int y, int w, int h);
 
+      image& grayscale_avg();
+      image& grayscale_lum();
+
+      image& flip_x();
+      image& flip_y();
+
+      image& flip_channel_x(std::uint8_t channel); //flips only a certian channel in x.
+      image& flip_channel_y(std::uint8_t channel); //flips only a certian channel in y.
+
       image& operator= (const image& img);
       image& operator= (image&& img);
+
+      void dump(std::ostream& os);
 
     public:
       int width, height, channels;

@@ -4,6 +4,7 @@
 #include <stb_image.h>
 #include <stb_image_write.h>
 
+#include <iostream>
 #include <cstdint>
 #include <cstring>
 #include <algorithm>
@@ -209,6 +210,97 @@ namespace gfx
     return cropped;
   }
 
+  image& image::grayscale_avg()
+  {
+    if(channels < 3)
+      Log::error("this image is already in grayscale");
+
+    for(int i = 0; i < width * height * channels; i += channels)
+    {
+      int gray = (data[i] + data[i + 1] + data[i + 2]) / 3;
+      std::memset(&data[i], gray, 3);
+    }
+
+    return *this;
+
+  }
+
+  image& image::grayscale_lum()
+  {
+    if(channels < 3)
+      Log::error("this image is already in grayscale");
+
+    for(int i = 0; i < width * height * channels; i += channels)
+    {
+      int gray = (0.2126f * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2]) / 3;
+      std::memset(&data[i], gray, 3);
+    }
+
+    return *this;
+  }
+
+  image& image::flip_x()
+  {
+    for(int i = 0; i < height; ++i)
+    {
+      for(int j = 0; j < width / 2; ++j)
+      { 
+        auto l = &data[(i * width + j) * channels];
+        auto r = &data[(i * width + (width - j - 1)) * channels];
+        for(int c = 0; c < channels; ++c)
+          std::swap(l[c], r[c]);
+      }
+    }
+
+    return *this;
+  }
+
+  image& image::flip_y()
+  {
+    for(int i = 0; i < height / 2; ++i)
+    {
+      for(int j = 0; j < width; ++j)
+      { 
+        auto u = &data[(i * width + j) * channels];
+        auto d = &data[((height - i - 1) * width + j) * channels];
+        for(int c = 0; c < channels; ++c)
+          std::swap(u[c], d[c]);
+      }
+    }
+
+    return *this;
+  }
+
+  image& image::flip_channel_x(std::uint8_t channel)
+  {
+    for(int i = 0; i < height; ++i)
+    {
+      for(int j = 0; j < width / 2; ++j)
+      { 
+        auto l = &data[(i * width + j) * channels];
+        auto r = &data[(i * width + (width - j - 1)) * channels];
+        std::swap(l[channel], r[channel]);
+      }
+    }
+
+    return *this;
+  }
+
+  image& image::flip_channel_y(std::uint8_t channel)
+  {
+    for(int i = 0; i < height / 2; ++i)
+    {
+      for(int j = 0; j < width; ++j)
+      { 
+        auto u = &data[(i * width + j) * channels];
+        auto d = &data[((height - i - 1) * width + j) * channels];
+        std::swap(u[channel], d[channel]);
+      }
+    }
+
+    return *this;
+  }
+
   image& image::operator= (const image& img)
   {
     create(img.width, img.height, img.channels, img.data);
@@ -237,6 +329,20 @@ namespace gfx
     img.data = nullptr;
     Log::info("copy construct from rvalue, 1 heap allocation saved");
     return *this;
+  }
+
+  void image::dump(std::ostream& os)
+  {
+    for(int i = 0; i < width * height * channels; ++i)
+    {
+      if(i % channels == 0)
+        os << ' ';
+
+      if(!data[i])
+        os << "00";
+      else
+        os << std::hex << (unsigned int)data[i];
+    }
   }
 
   //this section isn't related too much to an image.

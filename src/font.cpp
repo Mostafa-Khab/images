@@ -6,6 +6,7 @@ namespace gfx
 {
   FT_Library font::library;
   bool font::has_freetype = false;
+  int font::size = 0;
 
   font::font(): m_done(false)
   {
@@ -36,6 +37,7 @@ namespace gfx
 
   void font::set_size(int w, int h)
   {
+    size = h;
     FT_Set_Pixel_Sizes(face, w, h);
   }
 
@@ -67,6 +69,8 @@ namespace gfx
       (int)face->glyph->bitmap.width,
       (int)face->glyph->bitmap.rows,
       (int)(face->glyph->advance.x >> 6),
+      face->glyph->bitmap_left,
+      face->glyph->bitmap_top,
       face->glyph->bitmap.buffer };
   }
 

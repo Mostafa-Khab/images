@@ -29,7 +29,8 @@ namespace gfx
       character get(int code);
     public:
       FT_Face              face;
-      static FT_Library library;
+      static FT_Library    library;
+      static int           size;
     private:
       static bool has_freetype;
       bool m_done;
@@ -38,6 +39,7 @@ namespace gfx
   struct font::character
   {
     int w, h, advance;
+    int bearing_x, bearing_y;
     std::uint8_t* data;
   };
 }

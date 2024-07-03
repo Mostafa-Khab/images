@@ -142,21 +142,36 @@ namespace gfx
       return false;
     }
 
-    image text; 
-    text.create(str.size() * f.size, 1.2 * f.size, 1);
-    text.mask(0,0,0);
-    int pen = 0;
-
+    int lines_count = 1;
     for(unsigned int i = 0; i < str.size(); ++i)
     {
+      if(str[i] == '\n')
+        ++lines_count;
+    }
+
+    image text; 
+    text.create(str.size() * f.size, 1.2 * f.size * lines_count, 1);
+    text.mask(0,0,0);
+    int pen = 3;
+
+    int y = f.size;
+    for(unsigned int i = 0; i < str.size(); ++i)
+    {
+      if(str[i] == '\n')
+      {
+        pen = 0;
+        y += f.size;
+        continue;
+      }
+
       auto ch = f.get(str[i]);
       image sub;
       sub.create(ch.w, ch.h, 1, ch.data);
-      text.overlay(sub, pen, f.size - ch.h + (ch.h - ch.bearing_y));
+      text.overlay(sub, pen, y - ch.h + (ch.h - ch.bearing_y) - (f.size / 6));
       pen += ch.advance;
     }
 
-    text.crop(0, 0, pen, 1.2 * f.size);
+    text.crop(0, 0, pen, 1.2 * f.size * lines_count);
     *this = std::move(text);
     return true;
   }

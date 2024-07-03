@@ -364,6 +364,57 @@ namespace gfx
     return *this;
   }
 
+#define CHECK_THEN_ADD(X, Y, Z) \
+  if((X) < height && (Y) < width) \
+    sum += data[((X) * width + (Y)) * channels + c] * (Z);
+
+  //kernal dimentions should be inversed??
+  image& image::apply_kernal(float kernal[3][3])
+  {
+    image img;
+    img.create(width, height, channels);
+
+    for(int i = 0; i < height; ++i)
+    {
+      for(int j = 0; j < width; ++j)
+      {
+        for(int c = 0; c < channels /*((channels > 3)? 3 : channels)*/ ; ++c)
+        {
+          long sum = 0;
+
+          CHECK_THEN_ADD(i - 1, j - 1, kernal[0][0]);
+          CHECK_THEN_ADD(i - 1, j - 0, kernal[0][1]);
+          CHECK_THEN_ADD(i - 1, j + 1, kernal[0][2]);
+                                                  
+          CHECK_THEN_ADD(i - 0, j - 1, kernal[1][0]);
+          CHECK_THEN_ADD(i - 0, j - 0, kernal[1][1]);
+          CHECK_THEN_ADD(i - 0, j + 1, kernal[1][2]);
+                                                 
+          CHECK_THEN_ADD(i + 1, j - 1, kernal[2][0]);
+          CHECK_THEN_ADD(i + 1, j - 0, kernal[2][1]);
+          CHECK_THEN_ADD(i + 1, j + 1, kernal[2][2]);
+          
+          //data[((i - 1) * width + (j - 1)) * channels + c] * kernal[0][0]; 
+          //data[((i - 1) * width + (j - 0)) * channels + c] * kernal[0][1];
+          //data[((i - 1) * width + (j + 1)) * channels + c] * kernal[0][2];
+          //                                                              
+          //data[((i - 0) * width + (j - 1)) * channels + c] * kernal[1][0];
+          //data[((i - 0) * width + (j - 0)) * channels + c] * kernal[1][1];
+          //data[((i - 0) * width + (j + 1)) * channels + c] * kernal[1][2];
+          //                                                             
+          //data[((i + 1) * width + (j - 1)) * channels + c] * kernal[2][0];
+          //data[((i + 1) * width + (j - 0)) * channels + c] * kernal[2][1];
+          //data[((i + 1) * width + (j + 1)) * channels + c] * kernal[2][2];
+
+          img.data[(i * width + j) * channels + c] = sum / 9.f;
+        }
+      }
+    }
+
+    *this = std::move(img);
+    return *this;
+  }
+
   image& image::operator= (const image& img)
   {
     create(img.width, img.height, img.channels, img.data);

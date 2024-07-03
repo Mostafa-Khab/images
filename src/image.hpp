@@ -50,6 +50,8 @@ namespace gfx
       image& flip_channel_x(std::uint8_t channel); //flips only a certian channel in x.
       image& flip_channel_y(std::uint8_t channel); //flips only a certian channel in y.
 
+      image& apply_kernal(float kernal[3][3]);
+
       image& operator= (const image& img);
       image& operator= (image&& img);
 

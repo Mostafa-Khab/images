@@ -160,7 +160,7 @@ namespace gfx
     {
       if(str[i] == '\n')
       {
-        pen = 0;
+        pen = 3;
         y += f.size;
         continue;
       }

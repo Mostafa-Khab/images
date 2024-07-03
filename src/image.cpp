@@ -153,6 +153,7 @@ namespace gfx
     text.create(str.size() * f.size, 1.2 * f.size * lines_count, 1);
     text.mask(0,0,0);
     int pen = 3;
+    int max_width = 0;
 
     int y = f.size;
     for(unsigned int i = 0; i < str.size(); ++i)
@@ -169,9 +170,11 @@ namespace gfx
       sub.create(ch.w, ch.h, 1, ch.data);
       text.overlay(sub, pen, y - ch.h + (ch.h - ch.bearing_y) - (f.size / 6));
       pen += ch.advance;
+      if(pen > max_width)
+        max_width = pen;
     }
 
-    text.crop(0, 0, pen, 1.2 * f.size * lines_count);
+    text.crop(0, 0, max_width, 1.2 * f.size * lines_count);
     *this = std::move(text);
     return true;
   }

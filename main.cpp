@@ -8,7 +8,7 @@ const int font_size = 256;
 
 int main(int argc, const char* argv[])
 {
-  std::wstring str(L"pause game");
+  std::wstring str(L"play\nnow");
 
   gfx::font font;
   font.load("/usr/local/share/fonts/HurmitNerdFont/HurmitNerdFont-Regular.otf");

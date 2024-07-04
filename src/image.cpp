@@ -364,15 +364,19 @@ namespace gfx
     return *this;
   }
 
-#define CHECK_THEN_ADD(X, Y, Z) \
-  if((X) < height && (Y) < width) \
-    sum += data[((X) * width + (Y)) * channels + c] * (Z);
+#define CHECK_THEN_ADD(X, Y, Z)                           \
+  if((X) < height && (X) > 0 && (Y) < width && (Y) > 0)   \
+  {                                                       \
+    sum += data[((X) * width + (Y)) * channels + c] * (Z);\
+  }
 
   //kernal dimentions should be inversed??
-  image& image::apply_kernal(float kernal[3][3])
+  image& image::apply_kernal(float kernal[5][5], float div)
   {
     image img;
     img.create(width, height, channels);
+    if(img.data == nullptr)
+      Log::error("failed to allocate memory (malloc). wtf");
 
     for(int i = 0; i < height; ++i)
     {
@@ -382,25 +386,58 @@ namespace gfx
         {
           long sum = 0;
 
-          CHECK_THEN_ADD(i - 1, j - 1, kernal[0][0]);
-          CHECK_THEN_ADD(i - 1, j - 0, kernal[0][1]);
-          CHECK_THEN_ADD(i - 1, j + 1, kernal[0][2]);
-                                                  
-          CHECK_THEN_ADD(i - 0, j - 1, kernal[1][0]);
-          CHECK_THEN_ADD(i - 0, j - 0, kernal[1][1]);
-          CHECK_THEN_ADD(i - 0, j + 1, kernal[1][2]);
-                                                 
-          CHECK_THEN_ADD(i + 1, j - 1, kernal[2][0]);
-          CHECK_THEN_ADD(i + 1, j - 0, kernal[2][1]);
-          CHECK_THEN_ADD(i + 1, j + 1, kernal[2][2]);
+          CHECK_THEN_ADD(i - 2, j - 2, kernal[0][0]);
+          CHECK_THEN_ADD(i - 2, j - 1, kernal[0][1]);
+          CHECK_THEN_ADD(i - 2, j - 0, kernal[0][2]);
+          CHECK_THEN_ADD(i - 2, j + 1, kernal[0][3]);
+          CHECK_THEN_ADD(i - 2, j + 2, kernal[0][4]);
+
+          CHECK_THEN_ADD(i - 1, j - 2, kernal[1][0]);
+          CHECK_THEN_ADD(i - 1, j - 1, kernal[1][1]);
+          CHECK_THEN_ADD(i - 1, j - 0, kernal[1][2]);
+          CHECK_THEN_ADD(i - 1, j + 1, kernal[1][3]);
+          CHECK_THEN_ADD(i - 1, j + 2, kernal[1][4]);
+
+          CHECK_THEN_ADD(i - 0, j - 2, kernal[2][0]);
+          CHECK_THEN_ADD(i - 0, j - 1, kernal[2][1]);
+          CHECK_THEN_ADD(i - 0, j - 0, kernal[2][2]);
+          CHECK_THEN_ADD(i - 0, j + 1, kernal[2][3]);
+          CHECK_THEN_ADD(i - 0, j + 2, kernal[2][4]);
+
+          CHECK_THEN_ADD(i + 1, j - 2, kernal[3][0]);
+          CHECK_THEN_ADD(i + 1, j - 1, kernal[3][1]);
+          CHECK_THEN_ADD(i + 1, j - 0, kernal[3][2]);
+          CHECK_THEN_ADD(i + 1, j + 1, kernal[3][3]);
+          CHECK_THEN_ADD(i + 1, j + 2, kernal[3][4]);
+
+          CHECK_THEN_ADD(i + 2, j - 2, kernal[4][0]);
+          CHECK_THEN_ADD(i + 2, j - 1, kernal[4][1]);
+          CHECK_THEN_ADD(i + 2, j - 0, kernal[4][2]);
+          CHECK_THEN_ADD(i + 2, j + 1, kernal[4][3]);
+          CHECK_THEN_ADD(i + 2, j + 2, kernal[4][4]);
           
-          img.data[(i * width + j) * channels + c] = sum / 9.f;
+          img.data[(i * width + j) * channels + c] = sum / div;
         }
       }
     }
 
     *this = std::move(img);
     return *this;
+  }
+
+  image& image::apply_kernal(float kernel[3][3], float div)
+  {
+    float k[5][5] = {0};
+
+    for(int i = 0; i < 3; ++i)
+    {
+      for(int j = 0; j < 3; ++j)
+      {
+        k[i + 1][j + 1] = kernel[i][j];
+      }
+    }
+
+    return apply_kernal(k, div);
   }
 
   image& image::operator= (const image& img)

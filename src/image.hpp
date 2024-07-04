@@ -9,10 +9,10 @@
 #include <string>
 #include <cstdint>
 
+#include "font.hpp"
+
 namespace gfx
 {
-  class font;
-
   class image
   {
     public:

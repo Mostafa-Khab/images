@@ -378,7 +378,7 @@ namespace gfx
     {
       for(int j = 0; j < width; ++j)
       {
-        for(int c = 0; c < channels /*((channels > 3)? 3 : channels)*/ ; ++c)
+        for(int c = 0; c < channels ; ++c)
         {
           long sum = 0;
 
@@ -394,18 +394,6 @@ namespace gfx
           CHECK_THEN_ADD(i + 1, j - 0, kernal[2][1]);
           CHECK_THEN_ADD(i + 1, j + 1, kernal[2][2]);
           
-          //data[((i - 1) * width + (j - 1)) * channels + c] * kernal[0][0]; 
-          //data[((i - 1) * width + (j - 0)) * channels + c] * kernal[0][1];
-          //data[((i - 1) * width + (j + 1)) * channels + c] * kernal[0][2];
-          //                                                              
-          //data[((i - 0) * width + (j - 1)) * channels + c] * kernal[1][0];
-          //data[((i - 0) * width + (j - 0)) * channels + c] * kernal[1][1];
-          //data[((i - 0) * width + (j + 1)) * channels + c] * kernal[1][2];
-          //                                                             
-          //data[((i + 1) * width + (j - 1)) * channels + c] * kernal[2][0];
-          //data[((i + 1) * width + (j - 0)) * channels + c] * kernal[2][1];
-          //data[((i + 1) * width + (j + 1)) * channels + c] * kernal[2][2];
-
           img.data[(i * width + j) * channels + c] = sum / 9.f;
         }
       }
@@ -443,6 +431,7 @@ namespace gfx
     height   = img.height;
     channels = img.channels;
 
+    //img.data mustn't be null to be freed!, nice trick.
     img.data = nullptr;
     Log::info("copy construct from rvalue, 1 heap allocation saved");
     return *this;

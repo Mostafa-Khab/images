@@ -369,7 +369,7 @@ namespace gfx
   // if((X) < height && (X) > 0 && (Y) < width && (Y) > 0)   \
     // sum += data[((X) * width + (Y)) * channels + c] * (Z);
 
-//will this have any performance gain?
+//will this have any performance gain? 4 seconds from 57, not that bad!
 //future me, I'm sorry for this mess, but I'm hungry for performance even if small.
 
 #define CHECK_THEN_ADD(X, Y, Z)                           \
@@ -400,37 +400,6 @@ namespace gfx
             for(int x = -maxv; x <= maxv; ++x)
               CHECK_THEN_ADD(i + y, j + x, kernel[y + maxv][x + maxv]);
 
-
-          //CHECK_THEN_ADD(i - 2, j - 2, kernal[0][0]);
-          //CHECK_THEN_ADD(i - 2, j - 1, kernal[0][1]);
-          //CHECK_THEN_ADD(i - 2, j - 0, kernal[0][2]);
-          //CHECK_THEN_ADD(i - 2, j + 1, kernal[0][3]);
-          //CHECK_THEN_ADD(i - 2, j + 2, kernal[0][4]);
-
-          //CHECK_THEN_ADD(i - 1, j - 2, kernal[1][0]);
-          //CHECK_THEN_ADD(i - 1, j - 1, kernal[1][1]);
-          //CHECK_THEN_ADD(i - 1, j - 0, kernal[1][2]);
-          //CHECK_THEN_ADD(i - 1, j + 1, kernal[1][3]);
-          //CHECK_THEN_ADD(i - 1, j + 2, kernal[1][4]);
-
-          //CHECK_THEN_ADD(i - 0, j - 2, kernal[2][0]);
-          //CHECK_THEN_ADD(i - 0, j - 1, kernal[2][1]);
-          //CHECK_THEN_ADD(i - 0, j - 0, kernal[2][2]);
-          //CHECK_THEN_ADD(i - 0, j + 1, kernal[2][3]);
-          //CHECK_THEN_ADD(i - 0, j + 2, kernal[2][4]);
-
-          //CHECK_THEN_ADD(i + 1, j - 2, kernal[3][0]);
-          //CHECK_THEN_ADD(i + 1, j - 1, kernal[3][1]);
-          //CHECK_THEN_ADD(i + 1, j - 0, kernal[3][2]);
-          //CHECK_THEN_ADD(i + 1, j + 1, kernal[3][3]);
-          //CHECK_THEN_ADD(i + 1, j + 2, kernal[3][4]);
-
-          //CHECK_THEN_ADD(i + 2, j - 2, kernal[4][0]);
-          //CHECK_THEN_ADD(i + 2, j - 1, kernal[4][1]);
-          //CHECK_THEN_ADD(i + 2, j - 0, kernal[4][2]);
-          //CHECK_THEN_ADD(i + 2, j + 1, kernal[4][3]);
-          //CHECK_THEN_ADD(i + 2, j + 2, kernal[4][4]);
-          
           img.data[(i * width + j) * channels + c] = sum / div;
         }
       }
@@ -488,9 +457,15 @@ namespace gfx
     }
   }
 
+  bool image::valid(std::string ext)
+  {
+    return (ext == "png" || ext == "jpg" || ext == "tga" || ext == "bmp");
+  }
+
   //this section isn't related too much to an image.
-  std::string image_format(std::string file)
+  std::string ext(std::string file)
   {
     return std::string(file.end() - 3, file.end());
   }
+
 }

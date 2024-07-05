@@ -57,6 +57,7 @@ namespace gfx
       image& operator= (image&& img);
 
       void dump(std::ostream& os);
+      static bool valid(std::string ext);
 
     public:
       int width, height, channels;
@@ -64,6 +65,8 @@ namespace gfx
     private:
       bool m_loaded = false;;
   };
+
+  std::string ext(std::string file);
 
   typedef std::vector<std::vector<float>> kernel_t;
 }

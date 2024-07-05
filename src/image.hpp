@@ -64,6 +64,8 @@ namespace gfx
     private:
       bool m_loaded = false;;
   };
+
+  typedef std::vector<std::vector<float>> kernel_t;
 }
 
 #endif /* !IMAGE_HPP */

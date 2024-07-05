@@ -365,9 +365,15 @@ namespace gfx
     return *this;
   }
 
+// #define CHECK_THEN_ADD(X, Y, Z)                           \
+  // if((X) < height && (X) > 0 && (Y) < width && (Y) > 0)   \
+    // sum += data[((X) * width + (Y)) * channels + c] * (Z);
+
+//will this have any performance gain?
+//future me, I'm sorry for this mess, but I'm hungry for performance even if small.
+
 #define CHECK_THEN_ADD(X, Y, Z)                           \
-  if((X) < height && (X) > 0 && (Y) < width && (Y) > 0)   \
-    sum += data[((X) * width + (Y)) * channels + c] * (Z);
+    sum += data[(((X) >= height? height - 1 : (X) < 0? 0 : (X)) * width + ((Y) >= width? width - 1 : (Y) < 0? 0 : (Y))) * channels + c] * (Z);
 
   //kernal dimentions should be inversed??
   image& image::apply_kernel(std::vector<std::vector<float>>& kernel, float div)

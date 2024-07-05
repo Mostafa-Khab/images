@@ -8,6 +8,7 @@
 
 #include <string>
 #include <cstdint>
+#include <vector>
 
 #include "font.hpp"
 
@@ -50,8 +51,7 @@ namespace gfx
       image& flip_channel_x(std::uint8_t channel); //flips only a certian channel in x.
       image& flip_channel_y(std::uint8_t channel); //flips only a certian channel in y.
 
-      image& apply_kernal(float kernal[5][5], float div = 25.f);
-      image& apply_kernal(float kernal[3][3], float div = 9.f );
+      image& apply_kernel(std::vector<std::vector<float>>& kernal, float div = 25.f);
 
       image& operator= (const image& img);
       image& operator= (image&& img);

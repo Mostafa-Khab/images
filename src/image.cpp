@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <cstring>
 #include <algorithm>
+#include <vector>
 
 //check deps/ folder in https://github.com/Mostafa-Khab/gfx-project.git
 #include <logger.hpp>
@@ -366,17 +367,21 @@ namespace gfx
 
 #define CHECK_THEN_ADD(X, Y, Z)                           \
   if((X) < height && (X) > 0 && (Y) < width && (Y) > 0)   \
-  {                                                       \
-    sum += data[((X) * width + (Y)) * channels + c] * (Z);\
-  }
+    sum += data[((X) * width + (Y)) * channels + c] * (Z);
 
   //kernal dimentions should be inversed??
-  image& image::apply_kernal(float kernal[5][5], float div)
+  image& image::apply_kernel(std::vector<std::vector<float>>& kernel, float div)
   {
     image img;
     img.create(width, height, channels);
     if(img.data == nullptr)
       Log::error("failed to allocate memory (malloc). wtf");
+
+    //NOTE: the commented version won't work. because unsigned numbers can't be negative.
+    //as maxv is used as a negative number in y and x for loop, THAT WAS NEAR!!
+
+    //auto maxv = (kernel.size() - 1) / 2;
+    int maxv = (kernel.size() - 1) / 2;
 
     for(int i = 0; i < height; ++i)
     {
@@ -385,9 +390,9 @@ namespace gfx
         for(int c = 0; c < channels ; ++c)
         {
           long sum = 0;
-          for(int y = -2; y <= 2; ++y)
-            for(int x = -2; x <= 2; ++x)
-              CHECK_THEN_ADD(i + y, j + x, kernal[y + 2][x + 2])
+          for(int y = -maxv; y <= maxv; ++y)
+            for(int x = -maxv; x <= maxv; ++x)
+              CHECK_THEN_ADD(i + y, j + x, kernel[y + maxv][x + maxv]);
 
 
           //CHECK_THEN_ADD(i - 2, j - 2, kernal[0][0]);
@@ -427,21 +432,6 @@ namespace gfx
 
     *this = std::move(img);
     return *this;
-  }
-
-  image& image::apply_kernal(float kernel[3][3], float div)
-  {
-    float k[5][5] = {0};
-
-    for(int i = 0; i < 3; ++i)
-    {
-      for(int j = 0; j < 3; ++j)
-      {
-        k[i + 1][j + 1] = kernel[i][j];
-      }
-    }
-
-    return apply_kernal(k, div);
   }
 
   image& image::operator= (const image& img)

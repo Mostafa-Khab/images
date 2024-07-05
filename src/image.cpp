@@ -385,36 +385,40 @@ namespace gfx
         for(int c = 0; c < channels ; ++c)
         {
           long sum = 0;
+          for(int y = -2; y <= 2; ++y)
+            for(int x = -2; x <= 2; ++x)
+              CHECK_THEN_ADD(i + y, j + x, kernal[y + 2][x + 2])
 
-          CHECK_THEN_ADD(i - 2, j - 2, kernal[0][0]);
-          CHECK_THEN_ADD(i - 2, j - 1, kernal[0][1]);
-          CHECK_THEN_ADD(i - 2, j - 0, kernal[0][2]);
-          CHECK_THEN_ADD(i - 2, j + 1, kernal[0][3]);
-          CHECK_THEN_ADD(i - 2, j + 2, kernal[0][4]);
 
-          CHECK_THEN_ADD(i - 1, j - 2, kernal[1][0]);
-          CHECK_THEN_ADD(i - 1, j - 1, kernal[1][1]);
-          CHECK_THEN_ADD(i - 1, j - 0, kernal[1][2]);
-          CHECK_THEN_ADD(i - 1, j + 1, kernal[1][3]);
-          CHECK_THEN_ADD(i - 1, j + 2, kernal[1][4]);
+          //CHECK_THEN_ADD(i - 2, j - 2, kernal[0][0]);
+          //CHECK_THEN_ADD(i - 2, j - 1, kernal[0][1]);
+          //CHECK_THEN_ADD(i - 2, j - 0, kernal[0][2]);
+          //CHECK_THEN_ADD(i - 2, j + 1, kernal[0][3]);
+          //CHECK_THEN_ADD(i - 2, j + 2, kernal[0][4]);
 
-          CHECK_THEN_ADD(i - 0, j - 2, kernal[2][0]);
-          CHECK_THEN_ADD(i - 0, j - 1, kernal[2][1]);
-          CHECK_THEN_ADD(i - 0, j - 0, kernal[2][2]);
-          CHECK_THEN_ADD(i - 0, j + 1, kernal[2][3]);
-          CHECK_THEN_ADD(i - 0, j + 2, kernal[2][4]);
+          //CHECK_THEN_ADD(i - 1, j - 2, kernal[1][0]);
+          //CHECK_THEN_ADD(i - 1, j - 1, kernal[1][1]);
+          //CHECK_THEN_ADD(i - 1, j - 0, kernal[1][2]);
+          //CHECK_THEN_ADD(i - 1, j + 1, kernal[1][3]);
+          //CHECK_THEN_ADD(i - 1, j + 2, kernal[1][4]);
 
-          CHECK_THEN_ADD(i + 1, j - 2, kernal[3][0]);
-          CHECK_THEN_ADD(i + 1, j - 1, kernal[3][1]);
-          CHECK_THEN_ADD(i + 1, j - 0, kernal[3][2]);
-          CHECK_THEN_ADD(i + 1, j + 1, kernal[3][3]);
-          CHECK_THEN_ADD(i + 1, j + 2, kernal[3][4]);
+          //CHECK_THEN_ADD(i - 0, j - 2, kernal[2][0]);
+          //CHECK_THEN_ADD(i - 0, j - 1, kernal[2][1]);
+          //CHECK_THEN_ADD(i - 0, j - 0, kernal[2][2]);
+          //CHECK_THEN_ADD(i - 0, j + 1, kernal[2][3]);
+          //CHECK_THEN_ADD(i - 0, j + 2, kernal[2][4]);
 
-          CHECK_THEN_ADD(i + 2, j - 2, kernal[4][0]);
-          CHECK_THEN_ADD(i + 2, j - 1, kernal[4][1]);
-          CHECK_THEN_ADD(i + 2, j - 0, kernal[4][2]);
-          CHECK_THEN_ADD(i + 2, j + 1, kernal[4][3]);
-          CHECK_THEN_ADD(i + 2, j + 2, kernal[4][4]);
+          //CHECK_THEN_ADD(i + 1, j - 2, kernal[3][0]);
+          //CHECK_THEN_ADD(i + 1, j - 1, kernal[3][1]);
+          //CHECK_THEN_ADD(i + 1, j - 0, kernal[3][2]);
+          //CHECK_THEN_ADD(i + 1, j + 1, kernal[3][3]);
+          //CHECK_THEN_ADD(i + 1, j + 2, kernal[3][4]);
+
+          //CHECK_THEN_ADD(i + 2, j - 2, kernal[4][0]);
+          //CHECK_THEN_ADD(i + 2, j - 1, kernal[4][1]);
+          //CHECK_THEN_ADD(i + 2, j - 0, kernal[4][2]);
+          //CHECK_THEN_ADD(i + 2, j + 1, kernal[4][3]);
+          //CHECK_THEN_ADD(i + 2, j + 2, kernal[4][4]);
           
           img.data[(i * width + j) * channels + c] = sum / div;
         }

@@ -491,7 +491,6 @@ namespace gfx
   //this section isn't related too much to an image.
   std::string image_format(std::string file)
   {
-    //let's try rbegin if this shit worked
-    return std::string(std::find(file.begin(), file.end(), '.') + 1, file.end());
+    return std::string(file.end() - 3, file.end());
   }
 }

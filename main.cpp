@@ -23,7 +23,7 @@ int main(int argc, const char* argv[])
   };
 
   gfx::image img;
-  img.load("/home/sasa/Pictures/gruv.jpg");
+  img.load("/home/sasa/Pictures/bird64.png");
 
   img.apply_kernel(kernel, kernel.size() * kernel.size());
   img.apply_kernel(kernel, kernel.size() * kernel.size());

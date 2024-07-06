@@ -8,8 +8,8 @@
 
 #include <string>
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
+struct FT_LibraryRec_;
+struct FT_FaceRec_;
 
 namespace gfx
 {
@@ -27,9 +27,9 @@ namespace gfx
 
       character get(int code);
     public:
-      FT_Face              face;
-      static FT_Library    library;
-      static int           size;
+      FT_FaceRec_*           face;     //FT_Face but the origin not typedef
+      static FT_LibraryRec_* library;  //FT_Library but the origin not typedef
+      static int             size;
     private:
       static bool has_freetype;
       bool m_done;

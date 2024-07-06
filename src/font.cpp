@@ -1,5 +1,8 @@
 #include <logger.hpp>
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 #include "font.hpp"
 
 namespace gfx

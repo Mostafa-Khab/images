@@ -69,7 +69,7 @@ namespace gfx
       return false;
     }
 
-    std::string ext = image_format(file);
+    std::string ext = gfx::ext(file);
     int success = 1;
 
     if(ext == "png")
@@ -462,10 +462,16 @@ namespace gfx
     return (ext == "png" || ext == "jpg" || ext == "tga" || ext == "bmp");
   }
 
+  void image::flip_y_on_load(bool b)
+  {
+    stbi_set_flip_vertically_on_load(b);
+  }
+
   //this section isn't related too much to an image.
   std::string ext(std::string file)
   {
     return std::string(file.end() - 3, file.end());
   }
+  
 
 }

@@ -58,6 +58,7 @@ namespace gfx
 
       void dump(std::ostream& os);
       static bool valid(std::string ext);
+      static void flip_y_on_load(bool b = true);
 
     public:
       int width, height, channels;

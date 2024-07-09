@@ -53,6 +53,12 @@ namespace gfx
 
       image& apply_kernel(std::vector<std::vector<float>>& kernal, float div = 25.f);
 
+      //embed an extract an image from another
+      //layer is the bit number from the color.
+      //layer in embed and extract don't need to match, but it would be better.
+      image& embed(const image& img, int x, int y, uint8_t layer = 7);
+      image& extract(const image& img, int x, int y, uint8_t layer = 7);
+
       image& operator= (const image& img);
       image& operator= (image&& img);
 

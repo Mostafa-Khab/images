@@ -6,13 +6,15 @@ project(
 )
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_INSTALL_PREFIX "/usr/local/" CACHE STRING "path to install gfx_image")
+set(FREETYPE2_PATH "/usr/include/freetype2/" CACHE STRING "path to freetype2 folder")
 
-option(CMAKE_INSTALL_PREFIX /usr/local/ CACHE)
 option(BUILD_SHARED_LIBS ON CACHE)
 
-include_directories(/usr/include/freetype2/)
+message("path to freetype2: ${FREETYPE2_PATH}")
 
 add_library(gfx_image src/image.cpp src/font.cpp src/image.hpp src/font.hpp)
+target_include_directories(gfx_image PUBLIC "${FREETYPE2_PATH}")
 
 add_executable(main main.cpp)
 if(NOT BUILD_SHARED_LIBS)
@@ -21,7 +23,7 @@ if(NOT BUILD_SHARED_LIBS)
 else()
   target_link_options(main PUBLIC "-shared")
   target_link_libraries (main PUBLIC gfx_image freetype logger)
-endif()
+endif(NOT BUILD_SHARED_LIBS)
 
 install(
   TARGETS gfx_image

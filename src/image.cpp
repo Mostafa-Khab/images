@@ -409,6 +409,61 @@ namespace gfx
     return *this;
   }
 
+  image& image::embed(const image& img, int x, int y, uint8_t layer)
+  {
+    for(int i = 0; i < img.height; ++i)
+    {
+      if(i + y < 0) continue;
+      if(i + y >= height) break;
+
+      for(int j = 0; j < img.width; ++j)
+      {
+        if(j + x >= width) break;
+        if(j + x < 0) continue;
+
+        std::uint8_t* d = &data[((i + y) * width + (j + x)) * channels];
+        std::uint8_t* s = &img.data[(i * img.width + j) * img.channels];
+
+        for(int c = 0; c < img.channels && c < channels; ++c)
+        {
+          d[c] &= 0xfe;
+          d[c] |= (s[c] >> layer) & 1;
+        }
+      }
+    }
+    return *this;
+  }
+
+  image& image::extract(const image& img, int x, int y, uint8_t layer)
+  {
+
+    //not very precise.
+    if(img.size() > size())
+      create(img.width, img.height, img.channels);
+
+    for(int i = 0; i < img.height; ++i)
+    {
+      if(i + y < 0) continue;
+      if(i + y >= height) break;
+
+      for(int j = 0; j < img.width; ++j)
+      {
+        if(j + x >= width) break;
+        if(j + x < 0) continue;
+
+        std::uint8_t* d = &data[((i + y) * width + (j + x)) * channels];
+        std::uint8_t* s = &img.data[(i * img.width + j) * img.channels];
+
+        for(int c = 0; c < img.channels; ++c)
+        {
+          d[c] = (s[c] & 1) << layer;
+        }
+      }
+    }
+
+    return *this;
+  }
+
   image& image::operator= (const image& img)
   {
     create(img.width, img.height, img.channels, img.data);

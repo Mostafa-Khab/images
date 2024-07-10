@@ -15,6 +15,7 @@ message("path to freetype2: ${FREETYPE2_PATH}")
 
 add_library(gfx_image src/image.cpp src/font.cpp src/image.hpp src/font.hpp)
 target_include_directories(gfx_image PUBLIC "${FREETYPE2_PATH}")
+target_compile_options(gfx_image PUBLIC "-g")
 
 add_executable(main main.cpp)
 if(NOT BUILD_SHARED_LIBS)

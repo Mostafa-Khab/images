@@ -9,6 +9,7 @@
 #include <cstring>
 #include <algorithm>
 #include <vector>
+#include <sstream>
 
 //check deps/ folder in https://github.com/Mostafa-Khab/gfx-project.git
 #include <logger.hpp>
@@ -409,7 +410,7 @@ namespace gfx
     return *this;
   }
 
-  image& image::embed(const image& img, int x, int y, uint8_t layer)
+  image& image::embed(const image& img, const int x, const int y, uint8_t layer)
   {
     for(int i = 0; i < img.height; ++i)
     {
@@ -424,7 +425,7 @@ namespace gfx
         std::uint8_t* d = &data[((i + y) * width + (j + x)) * channels];
         std::uint8_t* s = &img.data[(i * img.width + j) * img.channels];
 
-        for(int c = 0; c < img.channels && c < channels; ++c)
+        for(int c = 0; c < std::min(channels, img.channels); ++c)
         {
           d[c] &= 0xfe;
           d[c] |= (s[c] >> layer) & 1;
@@ -434,7 +435,7 @@ namespace gfx
     return *this;
   }
 
-  image& image::extract(const image& img, int x, int y, uint8_t layer)
+  image& image::extract(const image& img, const int x, const int y, uint8_t layer)
   {
 
     //not very precise.
@@ -462,6 +463,79 @@ namespace gfx
     }
 
     return *this;
+  }
+
+#define IMAGE_HEADER_SIZE 64
+
+  image& image::embed(const std::string& str, const int x)
+  {
+    if(str.size() * 8 + IMAGE_HEADER_SIZE >= size() - x)
+    {
+      Log::error("string is too long to be embed in our image");
+      return *this;
+    }
+
+    for(int i = 0; i <= IMAGE_HEADER_SIZE; ++i)
+    {
+      data[i + x] &= 0xfe;
+      data[i + x] |= (str.size() >> i) & 1;
+    }
+
+    for(int i = 0; i < str.size(); ++i)
+    {
+      for(int j = 0; j < 8; ++j)
+      {
+        data[i * 8 + IMAGE_HEADER_SIZE + j + x] &= 0xfe;
+        data[i * 8 + IMAGE_HEADER_SIZE + j + x] |= (str[i] >> j) & 1;
+      }
+    }
+
+    return *this;
+  }
+
+  std::string image::extract(const int x) const
+  {
+    size_t size = 0;
+    for(int i = 0; i <= IMAGE_HEADER_SIZE; ++i)
+    {
+      size |= (data[i + x] & 1) << i;
+    }
+
+    std::string s;
+
+    for(int i = 0; i < size; ++i)
+    {
+      char c = 0;
+
+      for(int j = 0; j < 8; ++j)
+      {
+          c |= (data[i * 8 + IMAGE_HEADER_SIZE + j + x] & 1) << j;
+      }
+      s += c;
+    }
+
+    return s;
+  }
+
+  void image::extract(std::stringstream& ss,const  int x) const
+  {
+    //ss.clear();
+    size_t size = 0;
+    for(int i = 0; i <= IMAGE_HEADER_SIZE; ++i)
+    {
+      size |= (data[i + x] & 1) << i;
+    }
+
+
+    for(int i = 0; i < size; ++i)
+    {
+      char c = 0;
+
+      for(int j = 0; j < 8; ++j)
+        c |= (data[i * 8 + IMAGE_HEADER_SIZE + j + x] & 1) << j;
+
+      ss <<  c;
+    }
   }
 
   image& image::operator= (const image& img)

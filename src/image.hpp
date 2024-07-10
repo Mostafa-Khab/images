@@ -7,6 +7,7 @@
 #define IMAGE_HPP
 
 #include <string>
+#include <sstream>
 #include <cstdint>
 #include <vector>
 
@@ -56,8 +57,12 @@ namespace gfx
       //embed an extract an image from another
       //layer is the bit number from the color.
       //layer in embed and extract don't need to match, but it would be better.
-      image& embed(const image& img, int x, int y, uint8_t layer = 7);
-      image& extract(const image& img, int x, int y, uint8_t layer = 7);
+      image& embed(const image& img, const int x, const int y, uint8_t layer = 7);
+      image& extract(const image& img, const int x, const int y, uint8_t layer = 7);
+
+      image& embed(const std::string& str, const int start = 0);
+      std::string extract(int start = 0) const; //for small string
+      void extract(std::stringstream& ss, const int start = 0) const; //for large string
 
       image& operator= (const image& img);
       image& operator= (image&& img);

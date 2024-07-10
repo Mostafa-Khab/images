@@ -1,10 +1,10 @@
-# simple image manipulation
-- This is a very small class that can do some useful image manipulations.
+# simple image manipulation library
+- This is a small class that can do some useful image manipulations.
 - This class was intended to be add to my [gfx-project](https://github.com/Mostafa-Khab/gfx-project.git)
 - Because I found it useful so I decided that it will have its own repo.
 
 ### what can you do?
-- basic manipulations like crop, color mask, overlay, creating plain ones, etc...
+- some manipulations like crop, color mask, overlay, creating plain ones, applying kernels, embedding data, etc...
 
 ### how to use.
 - you need to download stb_image.h and stb_image_write.h from [https://github.com/nothings/stb.git](https://github.com/nothings/stb.git).

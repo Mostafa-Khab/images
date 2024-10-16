@@ -7,16 +7,18 @@
 
 namespace gfx
 {
-  FT_Library font::library;
+
   bool font::has_freetype = false;
-  int font::size = 0;
 
   font::font(): m_done(false), m_loaded(false)
   {
     if(has_freetype) 
       return;
 
-    int error = FT_Init_FreeType(&library);
+    library();
+    size() = 0;
+
+    int error = FT_Init_FreeType(&library());
     if(error)
     {
       Log::error("failed to init freetype");
@@ -35,18 +37,18 @@ namespace gfx
     if(!m_done)
       FT_Done_Face(face);
 
-    FT_Done_FreeType(library);
+    FT_Done_FreeType(library());
   }
 
   void font::set_size(int w, int h)
   {
-    size = h;
+    size() = h;
     FT_Set_Pixel_Sizes(face, w, h);
   }
 
   bool font::load(std::string file)
   {
-    int error = FT_New_Face(library, file.c_str(), 0, &face);
+    int error = FT_New_Face(library(), file.c_str(), 0, &face);
     if(error)
       Log::error("failed to load font file at: " + file);
     else

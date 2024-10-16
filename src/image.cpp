@@ -26,8 +26,7 @@ namespace gfx
 
   image::image(std::string file)
   {
-    if(!load(file))
-      Log::error("failed to load requested image: " + file);
+    load(file);
   }
 
   image::image(const image& img)
@@ -49,8 +48,10 @@ namespace gfx
   {
     data = reinterpret_cast<std::uint8_t*>(stbi_load(file.c_str(), &width, &height, &channels, 0));
 
-    if(data)
-      m_loaded = true;
+    if(!data)
+      Log::warn("failed to load requested image: " + file);
+
+    m_loaded = data;
 
     return data;
   }
@@ -60,13 +61,13 @@ namespace gfx
   {
     if(!channels || !width || !height)
     {
-      Log::error("trying to create() a zero sized image");
+      Log::error("image::save() -> trying to create() a zero sized image");
       return false;
     }
 
     if(!data)
     {
-      Log::error("trying to save() an image with a nullptr!!");
+      Log::error("image::save() -> trying to save() an image with a nullptr!!");
       return false;
     }
 
@@ -96,7 +97,8 @@ namespace gfx
   {
     if(!c || !w || !h)
     {
-      Log::error("trying to create() a zero sized image");
+      char ch = (!c)? 'c' : (!w)? 'w' : 'h'; 
+      Log::error("trying to create() a zero sized image, " +  ch);
       return false;
     }
 
@@ -152,31 +154,31 @@ namespace gfx
     }
 
     image text; 
-    text.create(str.size() * f.size, 1.2 * f.size * lines_count, 1);
+    text.create(str.size() * f.size(), 1.2 * f.size() * lines_count, 1);
     text.mask(0,0,0);
     int pen = 3;
     int max_width = 0;
 
-    int y = f.size;
+    int y = f.size();
     for(unsigned int i = 0; i < str.size(); ++i)
     {
       if(str[i] == '\n')
       {
         pen = 3;
-        y += f.size;
+        y += f.size();
         continue;
       }
 
       auto ch = f.get(str[i]);
       image sub;
       sub.create(ch.w, ch.h, 1, ch.data);
-      text.overlay(sub, pen, y - ch.h + (ch.h - ch.bearing_y) - (f.size / 6));
+      text.overlay(sub, pen, y - ch.h + (ch.h - ch.bearing_y) - (f.size() / 6));
       pen += ch.advance;
       if(pen > max_width)
         max_width = pen;
     }
 
-    text.crop(0, 0, max_width, 1.2 * f.size * lines_count);
+    text.crop(0, 0, max_width, 1.2 * f.size() * lines_count);
     *this = std::move(text);
     return true;
   }
@@ -382,7 +384,10 @@ namespace gfx
     image img;
     img.create(width, height, channels);
     if(img.data == nullptr)
+    {
       Log::error("failed to allocate memory (malloc). wtf");
+      return *this;
+    }
 
     //NOTE: the commented version won't work. because unsigned numbers can't be negative.
     //as maxv is used as a negative number in y and x for loop, THAT WAS NEAR!!
@@ -406,7 +411,7 @@ namespace gfx
       }
     }
 
-    *this = std::move(img);
+    this->operator=(std::move(img));
     return *this;
   }
 
@@ -548,13 +553,13 @@ namespace gfx
   {
     if(!img.channels || !img.width || !img.height)
     {
-      Log::error("trying to create() a zero sized image");
+      Log::error("image::operator= (image&&) -> trying to be assigned from a zero sized image");
       return *this;
     }
 
     if(!img.data)
     {
-      Log::error("create() tried to copy pixels from a nullptr");
+      Log::error("image::operator= (image&&) -> can't use a nullptr");
       return *this;
     }
     

@@ -27,9 +27,14 @@ namespace gfx
 
       character get(int code);
     public:
-      FT_FaceRec_*           face;     //FT_Face but the origin not typedef
-      static FT_LibraryRec_* library;  //FT_Library but the origin not typedef
-      static int             size;
+      //FT_Face but the origin not typedef
+      FT_FaceRec_*           face;          
+
+      //FT_Library but the origin not typedef
+      static FT_LibraryRec_*& library() { static FT_LibraryRec_* ftlib; return ftlib; };
+
+      //FT font size.
+      static int&             size() { static int size; return size;};
     private:
       static bool has_freetype;
       bool m_done;

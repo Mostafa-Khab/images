@@ -8,7 +8,7 @@
 
 ### how to use.
 - you need to download stb_image.h and stb_image_write.h from [https://github.com/nothings/stb.git](https://github.com/nothings/stb.git).
-- logger can be found in deps in [gfx-project](https://github.com/Mostafa-Khab/gfx-project.git), 
+- logger can be found in [gfx-project](https://github.com/Mostafa-Khab/gfx-project.git), 
 
 ### NOTE:
 This small project was made for learning purposes, so don't overrate it :smile:.

@@ -1,18 +1,29 @@
-# simple image manipulation library
-- This is a small class that can do some useful image manipulations.
-- This class was intended to be add to my [gfx-project](https://github.com/Mostafa-Khab/gfx-project.git)
-- Because I found it useful so I decided that it will have its own repo.
+# simple image manipulation library [C version]
+- This is a small library that can do some useful image manipulations.
+- C implementation still lacks font rendering [will exist in future]
 
 ### what can you do?
-- some manipulations like crop, color mask, overlay, creating plain ones, applying kernels, embedding data, etc...
+- some manipulations like crop, color mask, overlay, creating plain ones, embedding data, etc...
 
-### how to use.
-- you need to download stb_image.h and stb_image_write.h from [https://github.com/nothings/stb.git](https://github.com/nothings/stb.git).
-- logger can be found in [gfx-project](https://github.com/Mostafa-Khab/gfx-project.git), 
+### deps
+- stb_image.h and stb_image_write.h from [https://github.com/nothings/stb.git](https://github.com/nothings/stb.git).
+
+### simple example
+```c
+#include "src/image.h"
+
+int main()
+{
+  Image img;
+  Image_load(&img, "../assets/bird64.png);
+  Image_grayscale_avg(img);
+  Image_save(img, "gray.png");
+
+  return 0;
+}
+```
+- make sure to put this directory in your include path.
 
 ### NOTE:
-This small project was made for learning purposes, so don't overrate it :smile:.
-
-### NEW:
-You can now create an image from a string (or even wstring) and a font file.
+  This small project was made for learning purposes, so don't overrate it :smile:.
 

@@ -21,7 +21,7 @@ int main()
     ;
 
   Image bird;
-  Image_load(&bird, "/sasa/Pictures/bird64.png");
+  Image_load(&bird, "../assets/bird64.png");
   Image_embed_text(bird, text, 0);
 
   Image_save(bird, "./embed.png");

@@ -22,6 +22,10 @@ int main()
   return 0;
 }
 ```
+- compile with
+```bash
+gcc main.cpp -o main -lImage -lm
+```
 - make sure to put this directory in your include path.
 
 ### NOTE:

@@ -6,6 +6,8 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
+//NOTE: This is the C version image.hpp is the cpp version
+
 #include <stdint.h>
 #include <stdlib.h>
 

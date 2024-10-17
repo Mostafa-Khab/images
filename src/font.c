@@ -5,7 +5,7 @@
 
 #define CHECK(X, Y) \
   if((X)) {         \
-    log(Y);         \
+    LOG(Y);         \
     exit(-1);       \
   }
 
@@ -43,7 +43,7 @@ void Font_getc(Font_char* fc, unsigned long code)
   fc->by      = face->glyph->bitmap_top;
   fc->data    = face->glyph->bitmap.buffer;
 
-  assert(face->glyph->bitmap.buffer);
+  ASSERT(face->glyph->bitmap.buffer);
 }
 
 void Font_terminate()

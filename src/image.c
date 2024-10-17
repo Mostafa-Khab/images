@@ -47,7 +47,7 @@ void Image_save(Image img, const char* filepath) {
     } else if(strcmp(ext, "bmp")) {
        stbi_write_bmp(filepath, img.w, img.h, img.c, img.data);
     } else {
-       log("No valid image format");
+       LOG("No valid image format");
     }
 }
 
@@ -133,7 +133,7 @@ void Image_grayscale_avg(Image img)
   assert(img.data != NULL);
 
   if(img.c < 3)
-    log("this image is already in grayscale");
+    LOG("this image is already in grayscale");
 
   for(int i = 0; i < img.w * img.h * img.c; i += img.c)
   {
@@ -147,7 +147,7 @@ void Image_grayscale_lum(Image img)
   assert(img.data != NULL);
 
   if(img.c < 3)
-    log("this image is already in grayscale");
+    LOG("this image is already in grayscale");
 
   for(int i = 0; i < img.w * img.h * img.c; i += img.c)
   {

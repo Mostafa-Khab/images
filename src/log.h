@@ -9,15 +9,15 @@
 #include <stdio.h>
 
 #ifdef PRINT_LOG
-  #define assert(X) \
+  #define ASSERT(X) \
     if(!(X))        \
       fprintf(stderr, "\033[31mERROR(%s:%d): %s\033[0m\n", __FILE__, __LINE__, #X);
 
-  #define log(X)    \
+  #define LOG(X)    \
      fprintf(stderr, "\033[31mERROR(%s:%d): %s\033[0m\n", __FILE__, __LINE__, #X);
 #else
-  #define log(X)
-  #define assert(X)
+  #define LOG(X)
+  #define ASSERT(X)
 #endif // PRINT_LOG
 
 #endif /* !LOG_H */

@@ -8,11 +8,16 @@
 
 #include <stdio.h>
 
-#define assert(X) \
-  if(!(X))        \
-    fprintf(stderr, "\033[31mERROR(%s:%d): %s\033[0m\n", __FILE__, __LINE__, #X);
+#ifdef PRINT_LOG
+  #define assert(X) \
+    if(!(X))        \
+      fprintf(stderr, "\033[31mERROR(%s:%d): %s\033[0m\n", __FILE__, __LINE__, #X);
 
-#define log(X)    \
-    fprintf(stderr, "\033[31mERROR(%s:%d): %s\033[0m\n", __FILE__, __LINE__, #X);
+  #define log(X)    \
+     fprintf(stderr, "\033[31mERROR(%s:%d): %s\033[0m\n", __FILE__, __LINE__, #X);
+#else
+  #define log(X)
+  #define assert(X)
+#endif // PRINT_LOG
 
 #endif /* !LOG_H */

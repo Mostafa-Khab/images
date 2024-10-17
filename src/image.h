@@ -11,10 +11,12 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include "font.h"
+
 typedef struct Image
 {
-  unsigned char* data;
   unsigned int w, h, c; // width, height, channels
+  unsigned char* data;
 } Image;
 
 void Image_alloc(Image* img, unsigned int w, unsigned int h, unsigned int c);
@@ -51,5 +53,6 @@ void Image_extract(Image bg, const Image fg, const int x, const int y, uint8_t l
 void Image_embed_text(Image dst, const char* text, const unsigned int offset);
 void Image_extract_text(Image src, unsigned int offset);
 
+Image Image_text(const char* text);
 
 #endif /* !IMAGE_H */

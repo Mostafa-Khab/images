@@ -8,11 +8,14 @@
 
 #include "log.h"
 #include "image.h"
+#include "font.h"
 
 #define IMAGE_HEADER_SIZE 64
 
 void Image_alloc(Image* img, unsigned int w, unsigned int h, unsigned int c) {
-  printf("INFO: allocating %ux%u Image with %u components", w, h, c);
+#ifdef PRINT_LOG
+  printf("INFO: allocating %ux%u Image with %u components\n", w, h, c);
+#endif
 
   img->data = (unsigned char*)malloc(w * h * c * sizeof(unsigned int));
   assert(img->data != NULL);
@@ -264,7 +267,9 @@ void Image_embed_text(Image dst, const char* text, const unsigned int offset)
   assert(dst.data != NULL);
 
   size_t len = strlen(text);
+#ifdef PRINT_LOG
   printf("INFO: embeding text of size %lu\n", len);
+#endif
 
   for(unsigned int  i = 0; i <= IMAGE_HEADER_SIZE; ++i) {
     dst.data[i + offset] &= 0xfe;
@@ -296,4 +301,48 @@ void Image_extract_text(Image src, unsigned int  offset)
       //snprintf(buffer, size, "%c", c);
       printf("%c", c);
     }
+}
+
+extern unsigned int Font_size;
+
+Image Image_text(const char* text)
+{
+  const size_t len = strlen(text);
+  unsigned int lines = 1;
+
+  for(size_t i = 0; i < len; ++i) {
+    if(text[i] == '\n') ++lines;
+  }
+
+  Image r;
+  Image_alloc(&r, Font_size * len, 1.2 * Font_size * lines, 1);
+  Image_fill(&r, 0);
+
+  unsigned int x     = 3; // pen position
+  unsigned int y     = Font_size;
+  unsigned int cropw = 0;
+
+  Font_char fc;
+
+  for(size_t i = 0; i < len; ++i)
+  {
+    if(text[i] == '\n') {
+      x = 3;
+      y += Font_size;
+      continue;
+    }
+
+    Font_getc(&fc, text[i]);
+
+    Image sub = {.w = fc.w, .h = fc.h, .c = 1, .data = fc.data};
+    Image_overlay(r, sub, x, y - fc.h + (fc.h - fc.by) - (Font_size / 6));
+
+    x += fc.advance;
+
+    if(x > cropw)
+      cropw = x;
+  }
+
+  Image_crop(&r, 0, 0, cropw, 1.2 * Font_size * lines);
+  return r;
 }

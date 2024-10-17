@@ -1,22 +1,25 @@
-main: main.c gfx_image gfx_font
-	gcc -fsanitize=address -g main.c build/gfx_image.o build/gfx_font.o -o build/main -lm -I/usr/include/freetype2 -I/usr/include/libpng16 -lfreetype
+all: main test
 
+main: main.c lib
+	gcc main.c build/libImage.a -o build/main -lm -I/usr/include/freetype2 -lfreetype
 
-gfx_image: src/image.c src/image.h
-	gcc -g src/image.c -c -o build/gfx_image.o
-	ar cq build/libImage.a build/gfx_image.o 
+lib: image.o font.o
+	ar cq build/libImage.a build/image.o
+	ar cq build/libImage.a build/font.o
 
-gfx_font: src/font.c src/font.h
-	bear -- gcc -g src/font.c -c -o build/gfx_font.o -I/usr/include/freetype2 
-	ar cq build/libImage.a build/gfx_font.o
+image.o: src/image.c
+	gcc -c src/image.c -o build/image.o -lm -I/usr/include/freetype2
 
-clean: build/
-	rm -r build/*
+font.o: src/font.c
+	gcc -c src/font.c -o build/font.o -lm -I/usr/include/freetype2 -lfreetype
 
 test: tests/test.c
-	gcc -g test.c build/gfx_image.o build/gfx_font.o -o build/test -lm
+	gcc -g tests/test.c src/*.c -o build/test -I/usr/include/freetype2 -lm -lfreetype
 
 #change install path to ur liking
 install: main
 	install build/libImage.a /usr/local/lib/
-	install src/image.h src/log.h /usr/local/include
+	install src/*.h /usr/local/include
+	
+clean: build/
+	rm -r build/*

@@ -9,19 +9,14 @@
 
 int main()
 {
-  Font_char fc = {0};
-
   Font_init();
   Font_load("/usr/share/fonts/truetype/hack/Hack-Regular.ttf");
-  Font_setSize(0, 48);
-  Font_getc(&fc, 97);
+  Font_setSize(48);
 
-  print(fc.w);
-  print(fc.h);
-  print(fc.advance);
-  print(fc.bx);
-  print(fc.by);
+  Image text = Image_text("just go away");
+  Image_save(text, "text.png");
 
+  Image_free(&text);
   Font_terminate();
   return 0;
 }

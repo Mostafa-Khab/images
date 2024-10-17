@@ -18,7 +18,7 @@ typedef struct Font_char
 
 void Font_init();
 void Font_load(const char* filepath);
-void Font_setSize(unsigned int w, unsigned int h);
+void Font_setSize(unsigned int h);
 void Font_getc(Font_char* fc, unsigned long code);
 void Font_terminate();
 

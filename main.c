@@ -1,37 +1,27 @@
 #include <stdio.h>
+
+#include "log.h"
 #include "src/image.h"
+#include "src/font.h"
+
+#define print(X) \
+  printf(#X" = %d\n", (X));
 
 int main()
 {
-  const char* text =
-    "hallo, mein freund\n"
-    "hallo, mein freund\n"
-    "hallo, mein freund\n"
-    "hallo, mein freund\n"
-    "hallo, mein freund\n"
-    "hallo, mein freund\n"
-    "hallo, mein freund\n"
-    "hallo, mein freund\n"
-    "hallo, mein freund\n"
-    "hallo, mein freund\n"
-    "hallo, mein freund\n"
-    "hallo, mein freund\n"
-    "hallo, mein freund\n"
-    "hallo, mein freund\n"
-    ;
+  Font_char fc = {0};
 
-  Image bird;
-  Image_load(&bird, "../assets/bird64.png");
-  Image_embed_text(bird, text, 0);
+  Font_init();
+  Font_load("/usr/share/fonts/truetype/hack/Hack-Regular.ttf");
+  Font_setSize(0, 48);
+  Font_getc(&fc, 97);
 
-  Image_save(bird, "./embed.png");
+  print(fc.w);
+  print(fc.h);
+  print(fc.advance);
+  print(fc.bx);
+  print(fc.by);
 
-  char buff[512] = {0};
-  Image_extract_text(bird,0);
-
-  printf("%s \n", buff);
-
-  Image_free(&bird);
-
+  Font_terminate();
   return 0;
 }

@@ -18,7 +18,7 @@ void Image_alloc(Image* img, unsigned int w, unsigned int h, unsigned int c) {
 #endif
 
   img->data = (unsigned char*)malloc(w * h * c * sizeof(unsigned int));
-  assert(img->data != NULL);
+  ASSERT(img->data != NULL);
   img->w = w;
   img->h = h;
   img->c = c;
@@ -27,7 +27,7 @@ void Image_alloc(Image* img, unsigned int w, unsigned int h, unsigned int c) {
 void Image_load(Image* img, const char* filepath) {
   int w, h, c;
   img->data = (unsigned char*)stbi_load(filepath, &w, &h, &c, 0);
-  assert(img->data != NULL);
+  ASSERT(img->data != NULL);
 
   img->w = w;
   img->h = h;
@@ -35,7 +35,7 @@ void Image_load(Image* img, const char* filepath) {
 }
 
 void Image_save(Image img, const char* filepath) {
-    assert(img.data != NULL);
+    ASSERT(img.data != NULL);
 
     const char* ext = &filepath[strlen(filepath) - 3];
     if(strcmp(ext, "png") == 0) {
@@ -65,7 +65,7 @@ void Image_free(Image* img)
 }
 
 void Image_mask(Image img, float* mask) {
-  assert(img.data != NULL);
+  ASSERT(img.data != NULL);
 
   for(unsigned int i = 0; i < img.h; ++i) 
     for(unsigned int j = 0; j < img.w; ++j) 
@@ -74,8 +74,8 @@ void Image_mask(Image img, float* mask) {
 }
 
 void Image_overlay(Image bg, Image fg, int x, int y) {
-  assert(bg.data != NULL);
-  assert(fg.data != NULL);
+  ASSERT(bg.data != NULL);
+  ASSERT(fg.data != NULL);
 
   for(unsigned int i = 0; i < fg.h; ++i)
   {
@@ -103,8 +103,8 @@ void Image_overlay(Image bg, Image fg, int x, int y) {
 
 void Image_crop(Image* img, unsigned int  x, unsigned int  y, unsigned int  w, unsigned int  h)
 {
-  assert(img->data != NULL);
-  assert(x >= 0 && y >= 0);
+  ASSERT(img->data != NULL);
+  ASSERT(x >= 0 && y >= 0);
 
   Image cropped;
   Image_alloc(&cropped,w ,h,img->c);
@@ -130,7 +130,7 @@ void Image_crop(Image* img, unsigned int  x, unsigned int  y, unsigned int  w, u
 
 void Image_grayscale_avg(Image img) 
 {
-  assert(img.data != NULL);
+  ASSERT(img.data != NULL);
 
   if(img.c < 3)
     LOG("this image is already in grayscale");
@@ -144,7 +144,7 @@ void Image_grayscale_avg(Image img)
 
 void Image_grayscale_lum(Image img) 
 {
-  assert(img.data != NULL);
+  ASSERT(img.data != NULL);
 
   if(img.c < 3)
     LOG("this image is already in grayscale");
@@ -158,7 +158,7 @@ void Image_grayscale_lum(Image img)
 
 void Image_flip_x(Image img) 
 {
-  assert(img.data != NULL);
+  ASSERT(img.data != NULL);
   uint8_t temp[4] = {0};
   for(unsigned int i = 0; i < img.h; ++i) {
     for(unsigned int j = 0; j < img.w / 2; ++j) {
@@ -174,7 +174,7 @@ void Image_flip_x(Image img)
 
 void Image_flip_y(Image img) 
 {
-  assert(img.data != NULL);
+  ASSERT(img.data != NULL);
   uint8_t temp[4] = {0};
   for(unsigned int i = 0; i < img.h / 2; ++i) {
     for(unsigned int j = 0; j < img.w; ++j) {
@@ -190,7 +190,7 @@ void Image_flip_y(Image img)
 
 void Image_flip_channel_x(Image img, uint8_t channel) 
 {
-  assert(img.data != NULL);
+  ASSERT(img.data != NULL);
   for(unsigned int i = 0; i < img.h; ++i) {
     for(unsigned int j = 0; j < img.w / 2; ++j) {
        uint8_t temp = img.data[(i * img.w + j) * img.c + channel];
@@ -202,7 +202,7 @@ void Image_flip_channel_x(Image img, uint8_t channel)
 
 void Image_flip_channel_y(Image img, uint8_t channel) 
 {
-  assert(img.data != NULL);
+  ASSERT(img.data != NULL);
   for(unsigned int i = 0; i < img.h / 2; ++i) {
     for(unsigned int j = 0; j < img.w; ++j) {
        uint8_t temp = img.data[(i * img.w + j) * img.c];
@@ -263,8 +263,8 @@ void Image_extract(Image bg, const Image fg, const int x, const int y, uint8_t l
 
 void Image_embed_text(Image dst, const char* text, const unsigned int offset) 
 {
-  assert(strlen(text) * 8 + IMAGE_HEADER_SIZE <= dst.w * dst.h * dst.c - offset);
-  assert(dst.data != NULL);
+  ASSERT(strlen(text) * 8 + IMAGE_HEADER_SIZE <= dst.w * dst.h * dst.c - offset);
+  ASSERT(dst.data != NULL);
 
   size_t len = strlen(text);
 #ifdef PRINT_LOG
@@ -286,7 +286,7 @@ void Image_embed_text(Image dst, const char* text, const unsigned int offset)
 
 void Image_extract_text(Image src, unsigned int  offset) 
 {
-    assert(src.data != NULL);
+    ASSERT(src.data != NULL);
 
     size_t size = 0;
     for(unsigned int  i = 0; i <= IMAGE_HEADER_SIZE; ++i)

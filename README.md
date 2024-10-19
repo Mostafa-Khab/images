@@ -4,7 +4,7 @@
 
 ### what can you do?
 - some manipulations like crop, color mask, overlay, creating plain ones, embedding data, etc...
-- create images from text
+- create images from text (you can use nerd fonts to render icons)
 
 ### deps
 - stb_image.h and stb_image_write.h from [https://github.com/nothings/stb.git](https://github.com/nothings/stb.git).

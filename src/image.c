@@ -1,5 +1,6 @@
 #include <malloc.h>
 #include <string.h>
+#include <wchar.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -308,6 +309,48 @@ extern unsigned int Font_size;
 Image Image_text(const char* text)
 {
   const size_t len = strlen(text);
+  unsigned int lines = 1;
+
+  for(size_t i = 0; i < len; ++i) {
+    if(text[i] == '\n') ++lines;
+  }
+
+  Image r;
+  Image_alloc(&r, Font_size * len, 1.2 * Font_size * lines, 1);
+  Image_fill(&r, 0);
+
+  unsigned int x     = 3; // pen position
+  unsigned int y     = Font_size;
+  unsigned int cropw = 0;
+
+  Font_char fc;
+
+  for(size_t i = 0; i < len; ++i)
+  {
+    if(text[i] == '\n') {
+      x = 3;
+      y += Font_size;
+      continue;
+    }
+
+    Font_getc(&fc, text[i]);
+
+    Image sub = {.w = fc.w, .h = fc.h, .c = 1, .data = fc.data};
+    Image_overlay(r, sub, x, y - fc.h + (fc.h - fc.by) - (Font_size / 6));
+
+    x += fc.advance;
+
+    if(x > cropw)
+      cropw = x;
+  }
+
+  Image_crop(&r, 0, 0, cropw, 1.2 * Font_size * lines);
+  return r;
+}
+
+Image Image_wtext(const wchar_t* text)
+{
+  const size_t len = wcsnlen(text, ~0ull);
   unsigned int lines = 1;
 
   for(size_t i = 0; i < len; ++i) {
